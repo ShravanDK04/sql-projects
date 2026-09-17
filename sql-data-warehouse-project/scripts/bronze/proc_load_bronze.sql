@@ -1,3 +1,52 @@
+/*
+===============================================================================
+Bronze Layer Load Script
+===============================================================================
+Script Purpose:
+    This script loads raw data from external CRM and ERP CSV files
+    into the Bronze layer tables.
+
+    This is the MySQL equivalent of the Bronze loading procedure used
+    in the original SQL Server project.
+
+Actions Performed:
+    - Records the start time of the Bronze loading batch.
+    - Truncates all Bronze tables before loading.
+    - Loads data from six CSV source files.
+    - Displays progress messages during execution.
+    - Measures the loading duration for each table.
+    - Measures the total Bronze batch loading duration.
+
+Source Systems:
+    - CRM
+    - ERP
+
+Files Loaded:
+    CRM:
+        - cust_info.csv
+        - prd_info.csv
+        - sales_details.csv
+
+    ERP:
+        - CUST_AZ12.csv
+        - LOC_A101.csv
+        - PX_CAT_G1V2.csv
+
+Important:
+    This script uses LOAD DATA LOCAL INFILE.
+    The MySQL client must be started with --local-infile=1.
+
+    Example:
+    /usr/local/mysql/bin/mysql --local-infile=1 -u root -p
+
+Note:
+    MySQL does not allow LOAD DATA inside stored procedures,
+    therefore this file is an executable load script rather than
+    a stored procedure.
+
+===============================================================================
+*/
+
 USE DataWarehouse;
 
 
