@@ -1,3 +1,38 @@
+/*
+===============================================================================
+DDL Script: Create Bronze Layer Tables
+===============================================================================
+Script Purpose:
+    This script creates the Bronze layer tables in the DataWarehouse database.
+
+    The Bronze layer stores raw data loaded from the source CRM and ERP
+    CSV files with minimal transformation.
+
+Actions Performed:
+    - Creates the DataWarehouse database if it does not exist.
+    - Drops existing Bronze tables if they already exist.
+    - Creates the six Bronze layer tables.
+    - Uses naming conventions based on source system and source entity.
+
+Source Systems:
+    - CRM
+    - ERP
+
+Tables Created:
+    - bronze_crm_cust_info
+    - bronze_crm_prd_info
+    - bronze_crm_sales_details
+    - bronze_erp_cust_az12
+    - bronze_erp_loc_a101
+    - bronze_erp_px_cat_g1v2
+
+Important:
+    Running this script will DROP and recreate the Bronze tables,
+    which removes any existing data in those tables.
+
+===============================================================================
+*/
+
 CREATE DATABASE IF NOT EXISTS DataWarehouse;
 
 USE DataWarehouse;
