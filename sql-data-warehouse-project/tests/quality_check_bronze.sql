@@ -3,20 +3,22 @@
 Quality Checks: Bronze Layer
 ===============================================================================
 Script Purpose:
-    This script performs quality checks on all Bronze layer tables
-    after the source data has been loaded.
+    This script performs data-quality checks on the Bronze layer
+    of the DataWarehouse database.
+
+    The checks are used to verify that the raw CRM and ERP data was
+    loaded correctly before applying transformations in the Silver layer.
 
 Checks Performed:
-    - Verifies row counts.
-    - Checks primary/business identifiers for NULLs and duplicates.
-    - Checks unwanted leading/trailing spaces.
-    - Checks categorical value consistency.
-    - Checks invalid numeric values.
-    - Checks date consistency and date ranges.
-    - Checks relationships between CRM tables.
-    - Explores ERP categorical values.
+    - Validates record counts for Bronze tables.
+    - Checks for NULL values in important columns.
+    - Checks for duplicate records and identifiers.
+    - Checks for unwanted spaces in text columns.
+    - Checks date values for invalid or unexpected values.
+    - Reviews source values before transformation.
+    - Validates the overall Bronze data load.
 
-Bronze Tables Checked:
+Tables Checked:
     - bronze_crm_cust_info
     - bronze_crm_prd_info
     - bronze_crm_sales_details
@@ -24,16 +26,13 @@ Bronze Tables Checked:
     - bronze_erp_loc_a101
     - bronze_erp_px_cat_g1v2
 
-Expected Source Row Counts:
-    - bronze_crm_cust_info       : 18,494
-    - bronze_crm_prd_info        : 397
-    - bronze_crm_sales_details   : 60,398
-    - bronze_erp_cust_az12       : 18,484
-    - bronze_erp_loc_a101        : 18,484
-    - bronze_erp_px_cat_g1v2     : 37
+Expected Result:
+    The Bronze layer should contain the expected source records
+    without unexpected data loss or loading errors.
 
 Important:
-    Run this script after executing proc_load_bronze.sql.
+    Bronze is intended to represent raw source data, so these checks
+    validate the loaded data rather than performing transformations.
 
 ===============================================================================
 */
