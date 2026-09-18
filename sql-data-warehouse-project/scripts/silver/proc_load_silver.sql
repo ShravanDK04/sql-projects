@@ -60,6 +60,8 @@ USE DataWarehouse;
    BRONZE -> SILVER
    ============================================================ */
 
+SET @silver_start_time = CURRENT_TIMESTAMP(6);
+
 SELECT '=============================================' AS message;
 SELECT 'Loading Silver Layer' AS message;
 SELECT '=============================================' AS message;
@@ -69,18 +71,13 @@ SELECT '=============================================' AS message;
    CRM CUSTOMER
    ============================================================ */
 
-SET @start_time = NOW();
-
 SELECT '=============================================' AS message;
 SELECT 'LOAD: CRM CUSTOMER' AS message;
 SELECT '=============================================' AS message;
 
-SELECT '>> Truncating Table: silver_crm_cust_info' AS message;
+SET @start_time = CURRENT_TIMESTAMP(6);
 
 TRUNCATE TABLE silver_crm_cust_info;
-
-SELECT '>> Inserting Data Into: silver_crm_cust_info' AS message;
-
 
 INSERT INTO silver_crm_cust_info (
     cst_id,
@@ -91,7 +88,6 @@ INSERT INTO silver_crm_cust_info (
     cst_gndr,
     cst_create_date
 )
-
 SELECT
     cst_id,
 
@@ -145,34 +141,30 @@ FROM (
 
 WHERE flag_last = 1;
 
-
-SET @end_time = NOW();
+SET @end_time = CURRENT_TIMESTAMP(6);
 
 SELECT
-    'CRM CUSTOMER' AS table_name,
+    'CRM CUSTOMER' AS step,
+    @start_time AS start_time,
+    @end_time AS end_time,
     TIMESTAMPDIFF(
-        SECOND,
+        MICROSECOND,
         @start_time,
         @end_time
-    ) AS duration_seconds;
+    ) / 1000000 AS duration_seconds;
 
 
 /* ============================================================
    CRM PRODUCT
    ============================================================ */
 
-SET @start_time = NOW();
-
 SELECT '=============================================' AS message;
 SELECT 'LOAD: CRM PRODUCT' AS message;
 SELECT '=============================================' AS message;
 
-SELECT '>> Truncating Table: silver_crm_prd_info' AS message;
+SET @start_time = CURRENT_TIMESTAMP(6);
 
 TRUNCATE TABLE silver_crm_prd_info;
-
-SELECT '>> Inserting Data Into: silver_crm_prd_info' AS message;
-
 
 INSERT INTO silver_crm_prd_info (
     prd_id,
@@ -184,7 +176,6 @@ INSERT INTO silver_crm_prd_info (
     prd_start_dt,
     prd_end_dt
 )
-
 SELECT
     prd_id,
 
@@ -232,34 +223,30 @@ SELECT
 
 FROM bronze_crm_prd_info;
 
-
-SET @end_time = NOW();
+SET @end_time = CURRENT_TIMESTAMP(6);
 
 SELECT
-    'CRM PRODUCT' AS table_name,
+    'CRM PRODUCT' AS step,
+    @start_time AS start_time,
+    @end_time AS end_time,
     TIMESTAMPDIFF(
-        SECOND,
+        MICROSECOND,
         @start_time,
         @end_time
-    ) AS duration_seconds;
+    ) / 1000000 AS duration_seconds;
 
 
 /* ============================================================
    CRM SALES DETAILS
    ============================================================ */
 
-SET @start_time = NOW();
-
 SELECT '=============================================' AS message;
 SELECT 'LOAD: CRM SALES DETAILS' AS message;
 SELECT '=============================================' AS message;
 
-SELECT '>> Truncating Table: silver_crm_sales_details' AS message;
+SET @start_time = CURRENT_TIMESTAMP(6);
 
 TRUNCATE TABLE silver_crm_sales_details;
-
-SELECT '>> Inserting Data Into: silver_crm_sales_details' AS message;
-
 
 INSERT INTO silver_crm_sales_details (
     sls_ord_num,
@@ -272,7 +259,6 @@ INSERT INTO silver_crm_sales_details (
     sls_quantity,
     sls_price
 )
-
 SELECT
     sls_ord_num,
 
@@ -309,41 +295,36 @@ SELECT
 
 FROM bronze_crm_sales_details;
 
-
-SET @end_time = NOW();
+SET @end_time = CURRENT_TIMESTAMP(6);
 
 SELECT
-    'CRM SALES DETAILS' AS table_name,
+    'CRM SALES DETAILS' AS step,
+    @start_time AS start_time,
+    @end_time AS end_time,
     TIMESTAMPDIFF(
-        SECOND,
+        MICROSECOND,
         @start_time,
         @end_time
-    ) AS duration_seconds;
+    ) / 1000000 AS duration_seconds;
 
 
 /* ============================================================
    ERP CUSTOMER
    ============================================================ */
 
-SET @start_time = NOW();
-
 SELECT '=============================================' AS message;
 SELECT 'LOAD: ERP CUSTOMER' AS message;
 SELECT '=============================================' AS message;
 
-SELECT '>> Truncating Table: silver_erp_cust_az12' AS message;
+SET @start_time = CURRENT_TIMESTAMP(6);
 
 TRUNCATE TABLE silver_erp_cust_az12;
-
-SELECT '>> Inserting Data Into: silver_erp_cust_az12' AS message;
-
 
 INSERT INTO silver_erp_cust_az12 (
     cid,
     bdate,
     gen
 )
-
 SELECT
 
     CASE
@@ -358,6 +339,9 @@ SELECT
     END AS cid,
 
     CASE
+        WHEN bdate IS NULL
+            THEN NULL
+
         WHEN bdate > CURRENT_DATE
             THEN NULL
 
@@ -379,40 +363,35 @@ SELECT
 
 FROM bronze_erp_cust_az12;
 
-
-SET @end_time = NOW();
+SET @end_time = CURRENT_TIMESTAMP(6);
 
 SELECT
-    'ERP CUSTOMER' AS table_name,
+    'ERP CUSTOMER' AS step,
+    @start_time AS start_time,
+    @end_time AS end_time,
     TIMESTAMPDIFF(
-        SECOND,
+        MICROSECOND,
         @start_time,
         @end_time
-    ) AS duration_seconds;
+    ) / 1000000 AS duration_seconds;
 
 
 /* ============================================================
    ERP LOCATION
    ============================================================ */
 
-SET @start_time = NOW();
-
 SELECT '=============================================' AS message;
 SELECT 'LOAD: ERP LOCATION' AS message;
 SELECT '=============================================' AS message;
 
-SELECT '>> Truncating Table: silver_erp_loc_a101' AS message;
+SET @start_time = CURRENT_TIMESTAMP(6);
 
 TRUNCATE TABLE silver_erp_loc_a101;
-
-SELECT '>> Inserting Data Into: silver_erp_loc_a101' AS message;
-
 
 INSERT INTO silver_erp_loc_a101 (
     cid,
     cntry
 )
-
 SELECT
 
     REPLACE(
@@ -437,34 +416,30 @@ SELECT
 
 FROM bronze_erp_loc_a101;
 
-
-SET @end_time = NOW();
+SET @end_time = CURRENT_TIMESTAMP(6);
 
 SELECT
-    'ERP LOCATION' AS table_name,
+    'ERP LOCATION' AS step,
+    @start_time AS start_time,
+    @end_time AS end_time,
     TIMESTAMPDIFF(
-        SECOND,
+        MICROSECOND,
         @start_time,
         @end_time
-    ) AS duration_seconds;
+    ) / 1000000 AS duration_seconds;
 
 
 /* ============================================================
    ERP PRODUCT CATEGORY
    ============================================================ */
 
-SET @start_time = NOW();
-
 SELECT '=============================================' AS message;
 SELECT 'LOAD: ERP PRODUCT CATEGORY' AS message;
 SELECT '=============================================' AS message;
 
-SELECT '>> Truncating Table: silver_erp_px_cat_g1v2' AS message;
+SET @start_time = CURRENT_TIMESTAMP(6);
 
 TRUNCATE TABLE silver_erp_px_cat_g1v2;
-
-SELECT '>> Inserting Data Into: silver_erp_px_cat_g1v2' AS message;
-
 
 INSERT INTO silver_erp_px_cat_g1v2 (
     id,
@@ -472,7 +447,6 @@ INSERT INTO silver_erp_px_cat_g1v2 (
     subcat,
     maintenance
 )
-
 SELECT
     id,
     cat,
@@ -481,24 +455,39 @@ SELECT
 
 FROM bronze_erp_px_cat_g1v2;
 
-
-SET @end_time = NOW();
+SET @end_time = CURRENT_TIMESTAMP(6);
 
 SELECT
-    'ERP PRODUCT CATEGORY' AS table_name,
+    'ERP PRODUCT CATEGORY' AS step,
+    @start_time AS start_time,
+    @end_time AS end_time,
     TIMESTAMPDIFF(
-        SECOND,
+        MICROSECOND,
         @start_time,
         @end_time
-    ) AS duration_seconds;
+    ) / 1000000 AS duration_seconds;
 
 
 /* ============================================================
-   COMPLETION
+   SILVER LAYER COMPLETION
    ============================================================ */
 
-SELECT '=============================================' AS message;
+SET @silver_end_time = CURRENT_TIMESTAMP(6);
 
+SELECT '=============================================' AS message;
 SELECT 'Loading Silver Layer is Completed' AS message;
-
 SELECT '=============================================' AS message;
+
+
+/* ============================================================
+   TOTAL SILVER LAYER EXECUTION TIME
+   ============================================================ */
+
+SELECT
+    @silver_start_time AS silver_start_time,
+    @silver_end_time AS silver_end_time,
+    TIMESTAMPDIFF(
+        MICROSECOND,
+        @silver_start_time,
+        @silver_end_time
+    ) / 1000000 AS total_duration_seconds;
